@@ -2,116 +2,120 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Родословное древо: Дом Времени</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Дом Времени: Все ветви</title>
   <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
-  <link href="https://unpkg.com/vis-network@9.1.2/styles/vis-network.min.css" rel="stylesheet" />
+  <link href="https://unpkg.com/vis-network@9.1.2/styles/vis-network.min.css" rel="stylesheet"/>
   <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f2f4f8;
-      color: #333;
-    }
-    header {
-      background: #0b3d91;
-      color: white;
-      padding: 20px;
-      text-align: center;
-    }
-    h1 {
-      margin: 0;
-      font-size: 2.2em;
-    }
-    #mynetwork {
-      width: 100vw;
-      height: 90vh;
-      background: white;
-      border: 1px solid lightgray;
-    }
-    footer {
-      background: #0b3d91;
-      color: white;
-      text-align: center;
-      padding: 10px;
-      font-size: 0.9em;
-    }
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f9fbfd; color: #333; }
+    header { background: #003366; color: white; padding: 1.5rem; text-align: center; }
+    header h1 { margin: 0; font-size: 2rem; }
+    header p { margin-top: 0.5rem; font-size: 1.1rem; }
+    #controls { padding: 1rem; background: #f0f0f0; text-align: center; }
+    #mynetwork { width: 100vw; height: 70vh; background: white; }
+    #description { padding: 1rem; font-size: 1.1rem; background: #eaf4fe; text-align: center; min-height: 60px; border-top: 1px solid #ccc; }
+    footer { background: #003366; color: white; text-align: center; padding: 1rem; font-size: 0.9rem; }
+    select { padding: 0.5rem 1rem; font-size: 1rem; margin-left: 0.5rem; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Дом Времени: Семейное древо Моисеевых и родственных линий</h1>
-    <p>Моисеевы • Никитины • Кирилловы • Степановы • Недобельские • Поспеловы</p>
-  </header>
 
-  <div id="mynetwork"></div>
+<header>
+  <h1>Дом Времени: Все ветви семьи</h1>
+  <p>Выберите ветвь, чтобы увидеть её родословное древо</p>
+</header>
 
-  <footer>
-    © Дом Времени — визуализация родословной семьи Моисеевых. Создано с любовью ❤️
-  </footer>
+<div id="controls">
+  <label for="branch">Ветвь:</label>
+  <select id="branch">
+    <option value="moiseev">Моисеевы</option>
+    <option value="smirnov">Смирновы</option>
+  </select>
+</div>
 
-  <script>
-    const nodes = new vis.DataSet([
-      { id: 1, label: "👨 Иосиф Михайлович (1884–1936)" },
-      { id: 2, label: "👩 Анна Васильевна (1897–1939)" },
-      { id: 5, label: "👨 Николай Иосифович (1923–1989)" },
-      { id: 6, label: "👨 Павел Иосифович (1928–2005)" },
-      { id: 7, label: "👩 Галина Васильевна (1931–1998)" },
-      { id: 8, label: "👨 Евгений Николаевич (1953)" },
-      { id: 9, label: "👩 Марина Павловна (1954)" },
-      { id: 10, label: "👨 Максим Евгеньевич (1992)" },
-      { id: 11, label: "👩 Мария Алексеевна (1994)" },
-      { id: 12, label: "👦 Марк Максимович (2018)" },
-      { id: 13, label: "👦 Мартиниан Максимович (2021)" },
-    ]);
+<div id="mynetwork"></div>
+<div id="description">Нажмите на имя, чтобы увидеть описание.</div>
 
-    const edges = new vis.DataSet([
-      { from: 1, to: 5 },
-      { from: 2, to: 5 },
-      { from: 1, to: 6 },
-      { from: 2, to: 6 },
-      { from: 6, to: 8 },
-      { from: 7, to: 8 },
-      { from: 8, to: 10 },
-      { from: 9, to: 10 },
-      { from: 10, to: 12 },
-      { from: 10, to: 13 },
-      { from: 11, to: 12 },
-      { from: 11, to: 13 },
-    ]);
+<footer>© Дом Времени — Интерактивное древо семьи. Все права сохранены.</footer>
 
-    const container = document.getElementById("mynetwork");
-    const data = { nodes, edges };
-    const options = {
-      layout: {
-        hierarchical: {
-          direction: "UD",
-          sortMethod: "hubsize",
-          nodeSpacing: 150,
-          levelSeparation: 120
-        }
-      },
-      nodes: {
-        shape: "box",
-        font: { size: 16, face: "Arial" },
-        color: {
-          background: "#ffffff",
-          border: "#0b3d91",
-          highlight: {
-            background: "#e6f0ff",
-            border: "#0b3d91"
-          }
-        }
-      },
-      edges: {
-        arrows: { to: { enabled: false } },
-        color: "#999"
-      },
-      physics: false
-    };
+<script>
+const nodeSets = {
+  moiseev: [
+    {id:1,label:"👨 Дмитрий Моисеев"}, {id:2,label:"👩 Екатерина Олоничева"},
+    {id:3,label:"👨 Николай Моисеев\\n1931–2022"}, {id:4,label:"👩 Ольга Смирнова"},
+    {id:5,label:"👨 Евгений Моисеев\\n1953"}, {id:6,label:"👩 Марина Никитина\\n1954"},
+    {id:7,label:"👨 Максим Моисеев\\n1992"}, {id:8,label:"👩 Мария Алексеевна\\n1994"},
+    {id:9,label:"👦 Марк Моисеев\\n2018"}, {id:10,label:"👦 Мартиниан Моисеев\\n2021"}
+  ],
+  smirnov: [
+    {id:11,label:"👨 Василий Смирнов"}, {id:12,label:"👩 Людмила"},
+    {id:13,label:"👨 Вадим Смирнов†2004"}, {id:14,label:"👩 Наталья"}, {id:15,label:"👧 Ольга Вадимовна"},
+    {id:16,label:"👩 Галина Васильевна\\n1964"}, {id:17,label:"👨 Сергей"}, 
+    {id:18,label:"👦 Михаил Сергеевич†2024"}, {id:19,label:"👩 Елена Сергеевна\\n1993"},
+    {id:20,label:"👧 Василиса Евгеньевна"}
+  ]
+};
 
-    new vis.Network(container, data, options);
-  </script>
+const edgeSets = {
+  moiseev: [
+    {from:1,to:3},{from:2,to:3},{from:3,to:5},{from:4,to:5},{from:5,to:7},{from:6,to:7},
+    {from:7,to:9},{from:8,to:9},{from:7,to:10},{from:8,to:10}
+  ],
+  smirnov: [
+    {from:11,to:13},{from:12,to:13},{from:13,to:15},{from:14,to:15},
+    {from:11,to:16},{from:12,to:16},{from:16,to:18},{from:17,to:18},
+    {from:16,to:19},{from:17,to:19},{from:19,to:20}
+  ]
+};
+
+const descriptions = {
+  7: "Максим — мастер по дверям и планам. Устремлён в будущее.",
+  8: "Мария — мама и вдохновитель. Любит чай, покой и смысл.",
+  18: "Михаил — трагически погиб на войне в 2024 году.",
+  19: "Елена — мама Василисы, светлая душа семьи.",
+  20: "Василиса — самая юная в ветви. Радость дома."
+};
+
+let network;
+
+function draw(branch) {
+  const container = document.getElementById("mynetwork");
+  const nodes = new vis.DataSet(nodeSets[branch]);
+  const edges = new vis.DataSet(edgeSets[branch]);
+  const data = { nodes, edges };
+  const options = {
+    layout: {
+      hierarchical: {
+        direction: "UD", sortMethod: "hubsize", nodeSpacing: 150, levelSeparation: 100
+      }
+    },
+    nodes: {
+      shape: "box",
+      font: { size: 14, face: "Arial" },
+      color: {
+        background: "#fff", border: "#003366",
+        highlight: { background: "#e6f2ff", border: "#003366" }
+      }
+    },
+    edges: {
+      arrows: { to: false },
+      color: "#999"
+    },
+    physics: false
+  };
+  network = new vis.Network(container, data, options);
+  network.on("selectNode", function (params) {
+    const text = descriptions[params.nodes[0]] || "Описание недоступно.";
+    document.getElementById("description").innerText = text;
+  });
+}
+
+document.getElementById("branch").addEventListener("change", e => {
+  draw(e.target.value);
+});
+
+draw("moiseev");
+</script>
+
 </body>
 </html>
