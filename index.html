@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Родословное древо: Дом Времени</title>
+  <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
+  <link href="https://unpkg.com/vis-network@9.1.2/styles/vis-network.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f2f4f8;
+      color: #333;
+    }
+    header {
+      background: #0b3d91;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+      font-size: 2.2em;
+    }
+    #mynetwork {
+      width: 100vw;
+      height: 90vh;
+      background: white;
+      border: 1px solid lightgray;
+    }
+    footer {
+      background: #0b3d91;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Дом Времени: Семейное древо Моисеевых и родственных линий</h1>
+    <p>Моисеевы • Никитины • Кирилловы • Степановы • Недобельские • Поспеловы</p>
+  </header>
+
+  <div id="mynetwork"></div>
+
+  <footer>
+    © Дом Времени — визуализация родословной семьи Моисеевых. Создано с любовью ❤️
+  </footer>
+
+  <script>
+    const nodes = new vis.DataSet([
+      { id: 1, label: "👨 Иосиф Михайлович (1884–1936)" },
+      { id: 2, label: "👩 Анна Васильевна (1897–1939)" },
+      { id: 5, label: "👨 Николай Иосифович (1923–1989)" },
+      { id: 6, label: "👨 Павел Иосифович (1928–2005)" },
+      { id: 7, label: "👩 Галина Васильевна (1931–1998)" },
+      { id: 8, label: "👨 Евгений Николаевич (1953)" },
+      { id: 9, label: "👩 Марина Павловна (1954)" },
+      { id: 10, label: "👨 Максим Евгеньевич (1992)" },
+      { id: 11, label: "👩 Мария Алексеевна (1994)" },
+      { id: 12, label: "👦 Марк Максимович (2018)" },
+      { id: 13, label: "👦 Мартиниан Максимович (2021)" },
+    ]);
+
+    const edges = new vis.DataSet([
+      { from: 1, to: 5 },
+      { from: 2, to: 5 },
+      { from: 1, to: 6 },
+      { from: 2, to: 6 },
+      { from: 6, to: 8 },
+      { from: 7, to: 8 },
+      { from: 8, to: 10 },
+      { from: 9, to: 10 },
+      { from: 10, to: 12 },
+      { from: 10, to: 13 },
+      { from: 11, to: 12 },
+      { from: 11, to: 13 },
+    ]);
+
+    const container = document.getElementById("mynetwork");
+    const data = { nodes, edges };
+    const options = {
+      layout: {
+        hierarchical: {
+          direction: "UD",
+          sortMethod: "hubsize",
+          nodeSpacing: 150,
+          levelSeparation: 120
+        }
+      },
+      nodes: {
+        shape: "box",
+        font: { size: 16, face: "Arial" },
+        color: {
+          background: "#ffffff",
+          border: "#0b3d91",
+          highlight: {
+            background: "#e6f0ff",
+            border: "#0b3d91"
+          }
+        }
+      },
+      edges: {
+        arrows: { to: { enabled: false } },
+        color: "#999"
+      },
+      physics: false
+    };
+
+    new vis.Network(container, data, options);
+  </script>
+</body>
+</html>
