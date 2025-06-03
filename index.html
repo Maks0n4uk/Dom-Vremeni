@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Дом Времени: Все ветви</title>
+  <title>Дом Времени: Родословные Ветви</title>
   <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
   <link href="https://unpkg.com/vis-network@9.1.2/styles/vis-network.min.css" rel="stylesheet"/>
   <style>
@@ -21,15 +21,14 @@
 <body>
 
 <header>
-  <h1>Дом Времени: Все ветви семьи</h1>
-  <p>Выберите ветвь, чтобы увидеть её родословное древо</p>
+  <h1>Дом Времени: Все Родословные Ветви</h1>
+  <p>Нажмите на имя, чтобы увидеть краткое описание</p>
 </header>
 
 <div id="controls">
   <label for="branch">Ветвь:</label>
   <select id="branch">
-    <option value="moiseev">Моисеевы</option>
-    <option value="smirnov">Смирновы</option>
+    <option value="all">Показать все</option>
   </select>
 </div>
 
@@ -39,82 +38,79 @@
 <footer>© Дом Времени — Интерактивное древо семьи. Все права сохранены.</footer>
 
 <script>
-const nodeSets = {
-  moiseev: [
-    {id:1,label:"👨 Дмитрий Моисеев"}, {id:2,label:"👩 Екатерина Олоничева"},
-    {id:3,label:"👨 Николай Моисеев\\n1931–2022"}, {id:4,label:"👩 Ольга Смирнова"},
-    {id:5,label:"👨 Евгений Моисеев\\n1953"}, {id:6,label:"👩 Марина Никитина\\n1954"},
-    {id:7,label:"👨 Максим Моисеев\\n1992"}, {id:8,label:"👩 Мария Алексеевна\\n1994"},
-    {id:9,label:"👦 Марк Моисеев\\n2018"}, {id:10,label:"👦 Мартиниан Моисеев\\n2021"}
-  ],
-  smirnov: [
-    {id:11,label:"👨 Василий Смирнов"}, {id:12,label:"👩 Людмила"},
-    {id:13,label:"👨 Вадим Смирнов†2004"}, {id:14,label:"👩 Наталья"}, {id:15,label:"👧 Ольга Вадимовна"},
-    {id:16,label:"👩 Галина Васильевна\\n1964"}, {id:17,label:"👨 Сергей"}, 
-    {id:18,label:"👦 Михаил Сергеевич†2024"}, {id:19,label:"👩 Елена Сергеевна\\n1993"},
-    {id:20,label:"👧 Василиса Евгеньевна"}
-  ]
+const nodes = new vis.DataSet([
+  { id: 1, label: "Иосиф Никитин", title: "1884–1936", group: "nikitin" },
+  { id: 2, label: "Анна Никитина (Пичугина)", title: "жена Иосифа", group: "nikitin" },
+  { id: 3, label: "Павел Никитин", title: "22.03.1928–18.05.2005", group: "nikitin" },
+  { id: 4, label: "Николай Никитин", title: "08.1923–01.1989, начальник уголовного розыска в Кронштадте", group: "nikitin" },
+  { id: 5, label: "Анна Недобельская (Никитина)", title: "1897–1964", group: "nedobelsky" },
+  { id: 6, label: "Николай Недобельский (Емельянович)", title: "1898–1962", group: "nedobelsky" },
+  { id: 7, label: "Николай Недобельский", title: "сын Анны", group: "nedobelsky" },
+  { id: 8, label: "Ирина Недобельская", title: "дочь Николая", group: "nedobelsky" },
+
+  { id: 10, label: "Галина Кириллова (Никитина)", title: "05.12.1931–15.11.1998, воспитатель в детсаду", group: "kirillov" },
+  { id: 11, label: "Василий Кириллов", title: "16.03.1910–26.05.1987", group: "kirillov" },
+  { id: 12, label: "Екатерина Кириллова (Дунаева)", title: "1909–13.11.1987", group: "kirillov" },
+  { id: 13, label: "Николай Кириллов", title: "05.10.1940", group: "kirillov" },
+  { id: 14, label: "Рита", title: "жена Николая", group: "kirillov" },
+  { id: 15, label: "Татьяна Поспелова (Кириллова)", title: "09.05.1966", group: "pospelov" },
+  { id: 16, label: "Олег Поспелов", title: "муж Татьяны", group: "pospelov" },
+  { id: 17, label: "Антон Поспелов", title: "11.06.1988", group: "pospelov" },
+
+  { id: 20, label: "Павел Никитин", title: "22.03.1928–18.05.2005", group: "nikitin" },
+  { id: 21, label: "Галина Никитина (Кириллова)", title: "05.12.1931–15.11.1998", group: "kirillov" },
+
+  { id: 30, label: "Максим Моисеев", title: "26.11.1992, мастер по дверям", group: "moiseev" },
+  { id: 31, label: "Мария Моисеева (Степанова)", title: "22.06.1994, любит чай", group: "moiseev" },
+  { id: 32, label: "Марк Моисеев", title: "20.01.2018", group: "moiseev" },
+  { id: 33, label: "Мартиниан Моисеев", title: "05.12.2021", group: "moiseev" },
+
+  { id: 34, label: "Евгений Моисеев", title: "31.08.1953, родился в Санкт-Петербурге", group: "moiseev" },
+  { id: 35, label: "Марина Моисеева (Никитина)", title: "24.10.1954, родилась в Киеве", group: "moiseev" }
+]);
+
+const edges = new vis.DataSet([
+  { from: 1, to: 3 }, { from: 2, to: 3 },
+  { from: 1, to: 4 }, { from: 2, to: 4 },
+  { from: 5, to: 7 }, { from: 6, to: 7 },
+  { from: 7, to: 8 },
+  { from: 11, to: 10 }, { from: 12, to: 10 },
+  { from: 11, to: 13 }, { from: 12, to: 13 },
+  { from: 13, to: 15 }, { from: 14, to: 15 },
+  { from: 15, to: 17 }, { from: 16, to: 17 },
+  { from: 3, to: 21 },
+  { from: 34, to: 30 }, { from: 35, to: 30 },
+  { from: 30, to: 31 },
+  { from: 30, to: 32 }, { from: 31, to: 32 },
+  { from: 30, to: 33 }, { from: 31, to: 33 }
+]);
+
+const container = document.getElementById("mynetwork");
+const data = { nodes, edges };
+const options = {
+  layout: { hierarchical: { direction: "UD", sortMethod: "directed" } },
+  nodes: {
+    shape: "box",
+    margin: 10,
+    font: { size: 14 },
+    color: { background: "#ffffff", border: "#666666", highlight: { background: "#e6f7ff", border: "#1a73e8" } }
+  },
+  edges: {
+    arrows: { to: { enabled: false } },
+    smooth: true
+  },
+  interaction: {
+    hover: true,
+    navigationButtons: true,
+    zoomView: true
+  }
 };
 
-const edgeSets = {
-  moiseev: [
-    {from:1,to:3},{from:2,to:3},{from:3,to:5},{from:4,to:5},{from:5,to:7},{from:6,to:7},
-    {from:7,to:9},{from:8,to:9},{from:7,to:10},{from:8,to:10}
-  ],
-  smirnov: [
-    {from:11,to:13},{from:12,to:13},{from:13,to:15},{from:14,to:15},
-    {from:11,to:16},{from:12,to:16},{from:16,to:18},{from:17,to:18},
-    {from:16,to:19},{from:17,to:19},{from:19,to:20}
-  ]
-};
-
-const descriptions = {
-  7: "Максим — мастер по дверям и планам. Устремлён в будущее.",
-  8: "Мария — мама и вдохновитель. Любит чай, покой и смысл.",
-  18: "Михаил — трагически погиб на войне в 2024 году.",
-  19: "Елена — мама Василисы, светлая душа семьи.",
-  20: "Василиса — самая юная в ветви. Радость дома."
-};
-
-let network;
-
-function draw(branch) {
-  const container = document.getElementById("mynetwork");
-  const nodes = new vis.DataSet(nodeSets[branch]);
-  const edges = new vis.DataSet(edgeSets[branch]);
-  const data = { nodes, edges };
-  const options = {
-    layout: {
-      hierarchical: {
-        direction: "UD", sortMethod: "hubsize", nodeSpacing: 150, levelSeparation: 100
-      }
-    },
-    nodes: {
-      shape: "box",
-      font: { size: 14, face: "Arial" },
-      color: {
-        background: "#fff", border: "#003366",
-        highlight: { background: "#e6f2ff", border: "#003366" }
-      }
-    },
-    edges: {
-      arrows: { to: false },
-      color: "#999"
-    },
-    physics: false
-  };
-  network = new vis.Network(container, data, options);
-  network.on("selectNode", function (params) {
-    const text = descriptions[params.nodes[0]] || "Описание недоступно.";
-    document.getElementById("description").innerText = text;
-  });
-}
-
-document.getElementById("branch").addEventListener("change", e => {
-  draw(e.target.value);
+const network = new vis.Network(container, data, options);
+network.on("selectNode", function(params) {
+  const node = nodes.get(params.nodes[0]);
+  document.getElementById("description").innerText = node.title || "Информация отсутствует";
 });
-
-draw("moiseev");
 </script>
 
 </body>
