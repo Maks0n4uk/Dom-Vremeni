@@ -1,117 +1,116 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Дом Времени: Родословные Ветви</title>
-  <script src="https://unpkg.com/vis-network@9.1.2/dist/vis-network.min.js"></script>
-  <link href="https://unpkg.com/vis-network@9.1.2/styles/vis-network.min.css" rel="stylesheet"/>
+  <title>Семейное древо</title>
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f9fbfd; color: #333; }
-    header { background: #003366; color: white; padding: 1.5rem; text-align: center; }
-    header h1 { margin: 0; font-size: 2rem; }
-    header p { margin-top: 0.5rem; font-size: 1.1rem; }
-    #controls { padding: 1rem; background: #f0f0f0; text-align: center; }
-    #mynetwork { width: 100vw; height: 70vh; background: white; }
-    #description { padding: 1rem; font-size: 1.1rem; background: #eaf4fe; text-align: center; min-height: 60px; border-top: 1px solid #ccc; }
-    footer { background: #003366; color: white; text-align: center; padding: 1rem; font-size: 0.9rem; }
-    select { padding: 0.5rem 1rem; font-size: 1rem; margin-left: 0.5rem; }
+    #mynetwork {
+      width: 100%;
+      height: 100vh;
+      border: 1px solid lightgray;
+      background-color: #f0fdf4;
+    }
   </style>
 </head>
 <body>
-
-<header>
-  <h1>Дом Времени: Все Родословные Ветви</h1>
-  <p>Нажмите на имя, чтобы увидеть краткое описание</p>
-</header>
-
-<div id="controls">
-  <label for="branch">Ветвь:</label>
-  <select id="branch">
-    <option value="all">Показать все</option>
-  </select>
-</div>
-
+<h2 style="text-align:center; color:#2f855a;">Семейное древо</h2>
 <div id="mynetwork"></div>
-<div id="description">Нажмите на имя, чтобы увидеть описание.</div>
+<script type="text/javascript">
+  const nodes = new vis.DataSet([
+    // Смирновы, Королёвы, Стоговы
+    { id: 1, label: "Смирнова Мария Ивановна" },
+    { id: 2, label: "Смирнов Иван" },
+    { id: 3, label: "Моисеева (Смирнова) Ольга Ивановна" },
+    { id: 4, label: "Смирнов Василий Иванович" },
+    { id: 5, label: "Королёва (Смирнова) Татьяна Ивановна" },
+    { id: 6, label: "Стогова (Смирнова) Людмила Ивановна" },
+    { id: 7, label: "Смирнов Вадим Васильевич" },
+    { id: 8, label: "Смирнова Галина Васильевна" },
+    { id: 9, label: "Смирнова Ольга Вадимовна" },
+    { id: 10, label: "Смирнов Михаил Сергеевич" },
+    { id: 11, label: "Соломатова (Смирнова) Елена Сергеевна" },
+    { id: 12, label: "Соломатова Василиса Евгеньевна" },
+    { id: 13, label: "Королёв Аркадий Михайлович" },
+    { id: 14, label: "Королёва Ирина Аркадьевна" },
+    { id: 15, label: "Трофименко Виктор Юрьевич" },
+    { id: 16, label: "Трофименко Юлия Викторовна" },
+    { id: 17, label: "Щёголев Анатолий Николаевич" },
+    { id: 18, label: "Щёголев Даниил Анатолиевич" },
+    { id: 19, label: "Поселёнов Дмитрий Михайлович" },
+    { id: 20, label: "Стогов Арсений Георгиевич" },
+    { id: 21, label: "Стогова Марина Арсеньевна" },
+    { id: 22, label: "Стогов Игорь Арсеньевич" },
+    { id: 23, label: "Стогов Игорь Игоревич" },
+    { id: 24, label: "Екатерина (жена Игоря Арсеньевича)" },
 
-<footer>© Дом Времени — Интерактивное древо семьи. Все права сохранены.</footer>
+    // Никитины
+    { id: 25, label: "Никитин Иосиф Михайлович (1884–1936)" },
+    { id: 26, label: "Анна Васильевна (1897–1939)" },
+    { id: 27, label: "Никитин Николай Иосифович (1923–1989)" },
+    { id: 28, label: "Никитин Павел Иосифович (1928–2005)" },
+    { id: 29, label: "Никитина (Кириллова) Галина Васильевна (1931–1998)" },
 
-<script>
-const nodes = new vis.DataSet([
-  { id: 1, label: "Иосиф Никитин", title: "1884–1936", group: "nikitin" },
-  { id: 2, label: "Анна Никитина (Пичугина)", title: "жена Иосифа", group: "nikitin" },
-  { id: 3, label: "Павел Никитин", title: "22.03.1928–18.05.2005", group: "nikitin" },
-  { id: 4, label: "Николай Никитин", title: "08.1923–01.1989, начальник уголовного розыска в Кронштадте", group: "nikitin" },
-  { id: 5, label: "Анна Недобельская (Никитина)", title: "1897–1964", group: "nedobelsky" },
-  { id: 6, label: "Николай Недобельский (Емельянович)", title: "1898–1962", group: "nedobelsky" },
-  { id: 7, label: "Николай Недобельский", title: "сын Анны", group: "nedobelsky" },
-  { id: 8, label: "Ирина Недобельская", title: "дочь Николая", group: "nedobelsky" },
+    // Кирилловы
+    { id: 30, label: "Кириллов Василий Николаевич (1910–1987)" },
+    { id: 31, label: "Кириллова (Дунаева) Екатерина Сергеевна (1909–1987)" },
+    { id: 32, label: "Кириллов Николай Васильевич (05.10.1940)" },
+    { id: 33, label: "Рита (жена Николая)" },
+    { id: 34, label: "Поспелова (Кириллова) Татьяна Николаевна (09.05.1966)" },
+    { id: 35, label: "Поспелов Олег" },
+    { id: 36, label: "Поспелов Антон Олегович (11.06.1988)" },
+    { id: 37, label: "Кириллов Павел Николаевич (14.01.1916)" },
 
-  { id: 10, label: "Галина Кириллова (Никитина)", title: "05.12.1931–15.11.1998, воспитатель в детсаду", group: "kirillov" },
-  { id: 11, label: "Василий Кириллов", title: "16.03.1910–26.05.1987", group: "kirillov" },
-  { id: 12, label: "Екатерина Кириллова (Дунаева)", title: "1909–13.11.1987", group: "kirillov" },
-  { id: 13, label: "Николай Кириллов", title: "05.10.1940", group: "kirillov" },
-  { id: 14, label: "Рита", title: "жена Николая", group: "kirillov" },
-  { id: 15, label: "Татьяна Поспелова (Кириллова)", title: "09.05.1966", group: "pospelov" },
-  { id: 16, label: "Олег Поспелов", title: "муж Татьяны", group: "pospelov" },
-  { id: 17, label: "Антон Поспелов", title: "11.06.1988", group: "pospelov" },
+    // Морина — Манжура — Смотрин — Соловьёв
+    { id: 38, label: "Моисеева Галина Дмитриевна (?–2005)" },
+    { id: 39, label: "Морина Людмила (?–01.04.2025)" },
+    { id: 40, label: "Манжура Марина Анатольевна" },
+    { id: 41, label: "Смотрин Евгений (24.05.1991)" },
+    { id: 42, label: "Соловьёв Павел (10.05.2006)" },
 
-  { id: 20, label: "Павел Никитин", title: "22.03.1928–18.05.2005", group: "nikitin" },
-  { id: 21, label: "Галина Никитина (Кириллова)", title: "05.12.1931–15.11.1998", group: "kirillov" },
+    // Недобельские
+    { id: 43, label: "Недобельская (Никитина) Анна Михайловна (1897–1964)" },
+    { id: 44, label: "Недобельский Николай Емельянович (1898–1962)" },
+    { id: 45, label: "Недобельский Николай Николаевич" },
+    { id: 46, label: "Недобельская Ирина Николаевна" },
 
-  { id: 30, label: "Максим Моисеев", title: "26.11.1992, мастер по дверям", group: "moiseev" },
-  { id: 31, label: "Мария Моисеева (Степанова)", title: "22.06.1994, любит чай", group: "moiseev" },
-  { id: 32, label: "Марк Моисеев", title: "20.01.2018", group: "moiseev" },
-  { id: 33, label: "Мартиниан Моисеев", title: "05.12.2021", group: "moiseev" },
+    // Степановы
+    { id: 47, label: "Степанов Валентин Иванович (30.09.1940)" },
+    { id: 48, label: "Степанова Валентина Гавриловна (22.08.1945)" },
+    { id: 49, label: "Степанова Елена Валентиновна (20.08.1973)" },
 
-  { id: 34, label: "Евгений Моисеев", title: "31.08.1953, родился в Санкт-Петербурге", group: "moiseev" },
-  { id: 35, label: "Марина Моисеева (Никитина)", title: "24.10.1954, родилась в Киеве", group: "moiseev" }
-]);
+    // Яльцевы
+    { id: 50, label: "Яльцев Виталий Александрович (18.08.1972)" }
+  ]);
 
-const edges = new vis.DataSet([
-  { from: 1, to: 3 }, { from: 2, to: 3 },
-  { from: 1, to: 4 }, { from: 2, to: 4 },
-  { from: 5, to: 7 }, { from: 6, to: 7 },
-  { from: 7, to: 8 },
-  { from: 11, to: 10 }, { from: 12, to: 10 },
-  { from: 11, to: 13 }, { from: 12, to: 13 },
-  { from: 13, to: 15 }, { from: 14, to: 15 },
-  { from: 15, to: 17 }, { from: 16, to: 17 },
-  { from: 3, to: 21 },
-  { from: 34, to: 30 }, { from: 35, to: 30 },
-  { from: 30, to: 31 },
-  { from: 30, to: 32 }, { from: 31, to: 32 },
-  { from: 30, to: 33 }, { from: 31, to: 33 }
-]);
+  const edges = new vis.DataSet([
+    { from: 38, to: 39 },
+    { from: 39, to: 40 },
+    { from: 40, to: 41 },
+    { from: 40, to: 42 },
+    { from: 43, to: 45 },
+    { from: 44, to: 45 },
+    { from: 45, to: 46 },
+    { from: 47, to: 49 },
+    { from: 48, to: 49 },
+    { from: 50, to: 49 }
+  ]);
 
-const container = document.getElementById("mynetwork");
-const data = { nodes, edges };
-const options = {
-  layout: { hierarchical: { direction: "UD", sortMethod: "directed" } },
-  nodes: {
-    shape: "box",
-    margin: 10,
-    font: { size: 14 },
-    color: { background: "#ffffff", border: "#666666", highlight: { background: "#e6f7ff", border: "#1a73e8" } }
-  },
-  edges: {
-    arrows: { to: { enabled: false } },
-    smooth: true
-  },
-  interaction: {
-    hover: true,
-    navigationButtons: true,
-    zoomView: true
-  }
-};
-
-const network = new vis.Network(container, data, options);
-network.on("selectNode", function(params) {
-  const node = nodes.get(params.nodes[0]);
-  document.getElementById("description").innerText = node.title || "Информация отсутствует";
-});
+  const container = document.getElementById("mynetwork");
+  const data = { nodes: nodes, edges: edges };
+  const options = {
+    layout: { hierarchical: { direction: "UD", sortMethod: "directed" } },
+    nodes: {
+      shape: "box",
+      color: { background: "#d9f99d", border: "#4caf50" },
+      font: { color: "#1a202c" }
+    },
+    edges: {
+      color: "#a0aec0",
+      arrows: { to: { enabled: true } }
+    },
+    physics: false
+  };
+  new vis.Network(container, data, options);
 </script>
-
 </body>
 </html>
