@@ -1,116 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+  <meta charset="UTF-8">
   <title>Семейное древо</title>
-  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <style>
-    #mynetwork {
-      width: 100%;
-      height: 100vh;
-      border: 1px solid lightgray;
+    body {
       background-color: #f0fdf4;
+      font-family: Arial, sans-serif;
+    }
+    .tree-container {
+      padding: 2rem;
+    }
+    .person-card {
+      background: #d9f99d;
+      border: 2px solid #4caf50;
+      padding: 1rem;
+      margin: 1rem;
+      border-radius: 8px;
+      text-align: center;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+    }
+    .filter-section {
+      margin-bottom: 2rem;
     }
   </style>
 </head>
 <body>
-<h2 style="text-align:center; color:#2f855a;">Семейное древо</h2>
-<div id="mynetwork"></div>
-<script type="text/javascript">
-  const nodes = new vis.DataSet([
-    // Смирновы, Королёвы, Стоговы
-    { id: 1, label: "Смирнова Мария Ивановна" },
-    { id: 2, label: "Смирнов Иван" },
-    { id: 3, label: "Моисеева (Смирнова) Ольга Ивановна" },
-    { id: 4, label: "Смирнов Василий Иванович" },
-    { id: 5, label: "Королёва (Смирнова) Татьяна Ивановна" },
-    { id: 6, label: "Стогова (Смирнова) Людмила Ивановна" },
-    { id: 7, label: "Смирнов Вадим Васильевич" },
-    { id: 8, label: "Смирнова Галина Васильевна" },
-    { id: 9, label: "Смирнова Ольга Вадимовна" },
-    { id: 10, label: "Смирнов Михаил Сергеевич" },
-    { id: 11, label: "Соломатова (Смирнова) Елена Сергеевна" },
-    { id: 12, label: "Соломатова Василиса Евгеньевна" },
-    { id: 13, label: "Королёв Аркадий Михайлович" },
-    { id: 14, label: "Королёва Ирина Аркадьевна" },
-    { id: 15, label: "Трофименко Виктор Юрьевич" },
-    { id: 16, label: "Трофименко Юлия Викторовна" },
-    { id: 17, label: "Щёголев Анатолий Николаевич" },
-    { id: 18, label: "Щёголев Даниил Анатолиевич" },
-    { id: 19, label: "Поселёнов Дмитрий Михайлович" },
-    { id: 20, label: "Стогов Арсений Георгиевич" },
-    { id: 21, label: "Стогова Марина Арсеньевна" },
-    { id: 22, label: "Стогов Игорь Арсеньевич" },
-    { id: 23, label: "Стогов Игорь Игоревич" },
-    { id: 24, label: "Екатерина (жена Игоря Арсеньевича)" },
+<div class="container tree-container">
+  <h1 class="text-center text-success mb-4">Семейное древо</h1>
 
-    // Никитины
-    { id: 25, label: "Никитин Иосиф Михайлович (1884–1936)" },
-    { id: 26, label: "Анна Васильевна (1897–1939)" },
-    { id: 27, label: "Никитин Николай Иосифович (1923–1989)" },
-    { id: 28, label: "Никитин Павел Иосифович (1928–2005)" },
-    { id: 29, label: "Никитина (Кириллова) Галина Васильевна (1931–1998)" },
+  <div class="filter-section text-center">
+    <label for="branchFilter">Фильтр по ветвям: </label>
+    <select id="branchFilter" class="form-select d-inline-block w-auto">
+      <option value="all">Все</option>
+      <option value="Смирновы">Смирновы</option>
+      <option value="Кирилловы">Кирилловы</option>
+      <option value="Никитины">Никитины</option>
+      <option value="Поспеловы">Поспеловы</option>
+      <option value="Степановы">Степановы</option>
+      <option value="Недобельские">Недобельские</option>
+      <option value="Моисеевы">Моисеевы</option>
+    </select>
+  </div>
 
-    // Кирилловы
-    { id: 30, label: "Кириллов Василий Николаевич (1910–1987)" },
-    { id: 31, label: "Кириллова (Дунаева) Екатерина Сергеевна (1909–1987)" },
-    { id: 32, label: "Кириллов Николай Васильевич (05.10.1940)" },
-    { id: 33, label: "Рита (жена Николая)" },
-    { id: 34, label: "Поспелова (Кириллова) Татьяна Николаевна (09.05.1966)" },
-    { id: 35, label: "Поспелов Олег" },
-    { id: 36, label: "Поспелов Антон Олегович (11.06.1988)" },
-    { id: 37, label: "Кириллов Павел Николаевич (14.01.1916)" },
+  <div class="row" id="treeRoot">
+    <!-- Карточки будут вставлены сюда -->
+  </div>
+</div>
 
-    // Морина — Манжура — Смотрин — Соловьёв
-    { id: 38, label: "Моисеева Галина Дмитриевна (?–2005)" },
-    { id: 39, label: "Морина Людмила (?–01.04.2025)" },
-    { id: 40, label: "Манжура Марина Анатольевна" },
-    { id: 41, label: "Смотрин Евгений (24.05.1991)" },
-    { id: 42, label: "Соловьёв Павел (10.05.2006)" },
+<script>
+  const people = [
+    { name: "Смирнова Мария Ивановна", branch: "Смирновы", details: "Мать 4 детей: Ольги, Василия, Татьяны, Людмилы" },
+    { name: "Смирнов Иван", branch: "Смирновы", details: "Отец 4 детей: Ольги, Василия, Татьяны, Людмилы" },
+    { name: "Моисеева (Смирнова) Ольга Ивановна", branch: "Моисеевы", details: "Дочь Ивана и Марии Смирновых, мать Николая Дмитриевича Моисеева" },
+    { name: "Смирнов Василий Иванович", branch: "Смирновы", details: "Сын Ивана и Марии Смирновых, отец Вадима" },
+    { name: "Королёва (Смирнова) Татьяна Ивановна", branch: "Смирновы", details: "Дочь Ивана и Марии Смирновых, мать Аркадия" },
+    { name: "Стогова (Смирнова) Людмила Ивановна", branch: "Стоговы", details: "Дочь Ивана и Марии Смирновых, мать Арсения Георгиевича Стогова" },
 
-    // Недобельские
-    { id: 43, label: "Недобельская (Никитина) Анна Михайловна (1897–1964)" },
-    { id: 44, label: "Недобельский Николай Емельянович (1898–1962)" },
-    { id: 45, label: "Недобельский Николай Николаевич" },
-    { id: 46, label: "Недобельская Ирина Николаевна" },
+    { name: "Никитин Иосиф Михайлович", branch: "Никитины", details: "Отец Николая и Павла Иосифовичей (1884–1936)" },
+    { name: "Анна Васильевна", branch: "Никитины", details: "Жена Иосифа (1897–1939)" },
+    { name: "Никитин Николай Иосифович", branch: "Никитины", details: "Сын Иосифа и Анны (1923–1989)" },
+    { name: "Никитин Павел Иосифович", branch: "Никитины", details: "Сын Иосифа и Анны (1928–2005)" },
+    { name: "Никитина (Кириллова) Галина Васильевна", branch: "Кирилловы", details: "Жена Павла Иосифовича (1931–1998)" },
 
-    // Степановы
-    { id: 47, label: "Степанов Валентин Иванович (30.09.1940)" },
-    { id: 48, label: "Степанова Валентина Гавриловна (22.08.1945)" },
-    { id: 49, label: "Степанова Елена Валентиновна (20.08.1973)" },
+    { name: "Кириллов Василий Николаевич", branch: "Кирилловы", details: "Отец Николая и Павла (1910–1987)" },
+    { name: "Кириллова (Дунаева) Екатерина Сергеевна", branch: "Кирилловы", details: "Мать Николая и Павла (1909–1987)" },
+    { name: "Кириллов Николай Васильевич", branch: "Кирилловы", details: "Сын Василия и Екатерины (05.10.1940)" },
+    { name: "Поспелова (Кириллова) Татьяна Николаевна", branch: "Поспеловы", details: "Дочь Николая Кириллова (09.05.1966)" },
+    { name: "Поспелов Олег", branch: "Поспеловы", details: "Муж Татьяны" },
+    { name: "Поспелов Антон Олегович", branch: "Поспеловы", details: "Сын Татьяны и Олега (11.06.1988)" },
+    { name: "Кириллов Павел Николаевич", branch: "Кирилловы", details: "Брат Николая (14.01.1916)" },
 
-    // Яльцевы
-    { id: 50, label: "Яльцев Виталий Александрович (18.08.1972)" }
-  ]);
+    { name: "Анна Михайловна Недобельская (урожд. Никитина)", branch: "Недобельские", details: "Сестра Иосифа Никитина (1897–1964)" },
+    { name: "Николай Емельянович Недобельский", branch: "Недобельские", details: "Муж Анны (1898–1962)" },
+    { name: "Николай Николаевич Недобельский", branch: "Недобельские", details: "Сын Николая и Анны" },
+    { name: "Ирина Николаевна Недобельская", branch: "Недобельские", details: "Дочь Николая Недобельского" },
 
-  const edges = new vis.DataSet([
-    { from: 38, to: 39 },
-    { from: 39, to: 40 },
-    { from: 40, to: 41 },
-    { from: 40, to: 42 },
-    { from: 43, to: 45 },
-    { from: 44, to: 45 },
-    { from: 45, to: 46 },
-    { from: 47, to: 49 },
-    { from: 48, to: 49 },
-    { from: 50, to: 49 }
-  ]);
+    { name: "Максим Моисеев", branch: "Моисеевы", details: "Создатель древа, потомок нескольких ветвей" },
+    { name: "Мария Моисеева", branch: "Моисеевы", details: "Жена Максима, мать Марка и Мартиниана" },
+    { name: "Марк Моисеев", branch: "Моисеевы", details: "Старший сын, любит космос и быть героем" },
+    { name: "Мартиниан Моисеев", branch: "Моисеевы", details: "Младший сын, весёлый и активный" },
+  ];
 
-  const container = document.getElementById("mynetwork");
-  const data = { nodes: nodes, edges: edges };
-  const options = {
-    layout: { hierarchical: { direction: "UD", sortMethod: "directed" } },
-    nodes: {
-      shape: "box",
-      color: { background: "#d9f99d", border: "#4caf50" },
-      font: { color: "#1a202c" }
-    },
-    edges: {
-      color: "#a0aec0",
-      arrows: { to: { enabled: true } }
-    },
-    physics: false
-  };
-  new vis.Network(container, data, options);
+  const treeRoot = document.getElementById("treeRoot");
+  const filter = document.getElementById("branchFilter");
+
+  function renderCards(branch) {
+    treeRoot.innerHTML = "";
+    const filtered = branch === "all" ? people : people.filter(p => p.branch === branch);
+    filtered.forEach(p => {
+      const div = document.createElement("div");
+      div.className = "col-md-4 person-card";
+      div.innerHTML = `
+        <h5>${p.name}</h5>
+        <p><strong>Ветвь:</strong> ${p.branch}</p>
+        <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#desc-${p.name.replace(/\W/g,'')}">Показать описание</button>
+        <div class="collapse mt-2" id="desc-${p.name.replace(/\W/g,'')}">
+          <p>${p.details}</p>
+        </div>
+      `;
+      treeRoot.appendChild(div);
+    });
+  }
+
+  filter.addEventListener("change", () => renderCards(filter.value));
+  renderCards("all");
 </script>
 </body>
 </html>
